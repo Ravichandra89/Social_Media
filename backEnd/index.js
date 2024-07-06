@@ -8,8 +8,12 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-import { register } from "./controllers/auth.js";
-import authRoutes from "./routes/auth.js";
+import { register } from "./controllers/auth.controllers.js";
+import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
+import postRoutes from "./routes/post.routes.js";
+import { createPost } from "./controllers/post.controllers.js";
+import verifyWebToken from "./middlewares/auth.middlewares.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,8 +47,12 @@ const upload = multer({ storage: storageMulter });
 const port = process.env.PORT || 5001;
 
 app.post("/auth/register", upload.single("picture"), register);
+app.post("/post", verifyWebToken, upload.single("picture"), createPost);
 
+// Routes
 app.post("/auth", authRoutes);
+app.post("/auth", userRoutes);
+app.post("/auth", postRoutes);
 
 const connectDB = async () => {
   try {
