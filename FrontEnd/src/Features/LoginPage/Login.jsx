@@ -31,8 +31,6 @@ const DefaultLogin = {
   password: "",
 };
 
-
-
 // Making Schemas from YUP React Module
 const RegisterSchema = object({
   firstName: yup.string().required("required"),
@@ -50,11 +48,35 @@ const LoginSchema = object({
   password: yup.string().required("required"),
 });
 
-
 const Login = () => {
-  return <Formik>
-    
-  </Formik>
+  const { palette } = useTheme();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const Login = async (req, res) => {
+    try {
+      const loggedResponse = await fetch("http://localhost:4001/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const login = await loggedResponse.json();
+      res.resetForm();
+      if(login){
+        dispatch(
+          setLogin({
+            user : loggedIn.user,
+            token : loggedIn.token,
+          })
+        );
+        navigate("/home");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return <Formik></Formik>;
 };
 
 export default Login;
