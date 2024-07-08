@@ -14,6 +14,9 @@ import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import { createPost } from "./controllers/post.controllers.js";
 import verifyWebToken from "./middlewares/auth.middlewares.js";
+import User from "./models/User.js";
+import Post from "./models/Post.js";
+import { posts, users } from "./Data/Data.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,6 +65,10 @@ const connectDB = async () => {
     });
     app.listen(port, () => {
       console.log(`Server is running On : ${port}`);
+
+      // Insert Users & Posts Data
+      User.insertMany(users);
+      Post.insertMany(posts);
     });
   } catch (error) {
     console.error("ERROR : While DB connection !!", error.message);
